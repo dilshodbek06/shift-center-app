@@ -1,4 +1,5 @@
 import About from "./_components/about";
+import Courses from "./_components/courses";
 import Hero from "./_components/hero";
 import MarqueeImages from "./_components/marquee-images";
 import OurDirections from "./_components/our-directions";
@@ -33,6 +34,9 @@ export default function Home() {
         <OurDirections />
       </div>
       {/* courses */}
+      <div>
+        <Courses />
+      </div>
       {/* CONSULTATION */}
       {/* our location */}
       {/* footer */}
