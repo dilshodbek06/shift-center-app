@@ -1,6 +1,7 @@
 import About from "./_components/about";
 import Consultation from "./_components/consultation";
 import Courses from "./_components/courses";
+import Footer from "./_components/footer";
 import Hero from "./_components/hero";
 import MarqueeImages from "./_components/marquee-images";
 import OurDirections from "./_components/our-directions";
@@ -48,6 +49,9 @@ export default function Home() {
         <OurLocation />
       </div>
       {/* footer */}
+      <div className="p-2 md:p-3">
+        <Footer />
+      </div>
     </div>
   );
 }
