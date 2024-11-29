@@ -1,8 +1,10 @@
 import About from "./_components/about";
+import Consultation from "./_components/consultation";
 import Courses from "./_components/courses";
 import Hero from "./_components/hero";
 import MarqueeImages from "./_components/marquee-images";
 import OurDirections from "./_components/our-directions";
+import OurLocation from "./_components/our-location";
 import StudentOpinion from "./_components/student-opinion";
 import WhyUs from "./_components/why-us";
 
@@ -38,7 +40,13 @@ export default function Home() {
         <Courses />
       </div>
       {/* CONSULTATION */}
+      <div className="mt-10">
+        <Consultation />
+      </div>
       {/* our location */}
+      <div className="mt-20">
+        <OurLocation />
+      </div>
       {/* footer */}
     </div>
   );

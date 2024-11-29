@@ -116,3 +116,9 @@ body {
     26.97px -26.97px 26.97px 0px #7474741a inset;
   backdrop-filter: blur(53.93333435058594px);
 }
+
+.consul-div {
+  box-shadow: -37.7px 37.7px 37.7px 0px #ffffff1a inset,
+    37.7px -37.7px 37.7px 0px #a5a5a51a inset;
+  backdrop-filter: blur(75.4000015258789px);
+}

@@ -9,7 +9,7 @@ const CourseCard = () => {
         </div>
         <div>
           <h5 className="text-white font-bold text-2xl">FRONTEND</h5>
-          <p className="text-white font-bold text-xl">10 OY</p>
+          <p className="text-white font-bold text-xl mt-1 -mb-1">10 OY</p>
         </div>
       </div>
     </div>
