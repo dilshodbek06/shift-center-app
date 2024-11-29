@@ -1,13 +1,13 @@
 const MarqueeImages = () => {
   return (
-    <div className="marquee-div-outer pt-[70px] pb-[40px]">
+    <div className="marquee-div-outer pt-[70px] pb-[40px] text-white">
       <div className="relative overflow-hidden">
         {/* Marquee wrapper */}
         <div className="flex animate-marquee space-x-8">
           {/* Images */}
           {[...Array(10)].map((_, i) => (
             <div
-              className="min-h-[300px] w-1/4 min-w-[300px] border rounded-md"
+              className="min-h-[300px] w-1/4 min-w-[300px] border rounded-md flex justify-center items-center"
               key={i}
             >
               Image

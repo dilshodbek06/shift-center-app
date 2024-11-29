@@ -1,6 +1,7 @@
 import About from "./_components/about";
 import Hero from "./_components/hero";
 import MarqueeImages from "./_components/marquee-images";
+import WhyUs from "./_components/why-us";
 
 export default function Home() {
   return (
@@ -18,7 +19,9 @@ export default function Home() {
         <MarqueeImages />
       </div>
       {/* why us */}
-      <div></div>
+      <div className="mt-[80px]">
+        <WhyUs />
+      </div>
       {/* students opinion */}
       {/* our directions */}
       {/* courses */}

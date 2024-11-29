@@ -104,3 +104,9 @@ body {
 
   backdrop-filter: blur(132px);
 }
+
+.why-use-div {
+  box-shadow: -26px 26px 26px 0px #ffffff1a inset,
+    26px -26px 26px 0px #a5a5a51a inset;
+  backdrop-filter: blur(52px);
+}
