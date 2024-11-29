@@ -10,7 +10,7 @@ const WhyUsCard = () => {
         <h5 className="text-white font-bold text-2xl">LOREM IPSOM</h5>
       </div>
       <div className="mt-[24px]">
-        <p className="text-white font-normal ml-[20px] text-xl max-w-[385px]">
+        <p className="text-white font-normal ml-[20px] text-xl max-w-[340px] md:max-w-[370px]">
           Lorem ipsom lorem ipsom lorem imsom
         </p>
       </div>

@@ -1,6 +1,7 @@
 import About from "./_components/about";
 import Hero from "./_components/hero";
 import MarqueeImages from "./_components/marquee-images";
+import StudentOpinion from "./_components/student-opinion";
 import WhyUs from "./_components/why-us";
 
 export default function Home() {
@@ -23,6 +24,9 @@ export default function Home() {
         <WhyUs />
       </div>
       {/* students opinion */}
+      <div>
+        <StudentOpinion />
+      </div>
       {/* our directions */}
       {/* courses */}
       {/* CONSULTATION */}

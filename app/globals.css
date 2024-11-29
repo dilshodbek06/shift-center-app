@@ -110,3 +110,9 @@ body {
     26px -26px 26px 0px #a5a5a51a inset;
   backdrop-filter: blur(52px);
 }
+
+.student-opinion-card {
+  box-shadow: -26.97px 26.97px 26.97px 0px #ffffff1a inset,
+    26.97px -26.97px 26.97px 0px #7474741a inset;
+  backdrop-filter: blur(53.93333435058594px);
+}
