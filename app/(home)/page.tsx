@@ -1,4 +1,6 @@
+import About from "./_components/about";
 import Hero from "./_components/hero";
+import MarqueeImages from "./_components/marquee-images";
 
 export default function Home() {
   return (
@@ -8,8 +10,15 @@ export default function Home() {
         <Hero />
       </div>
       {/* About */}
-      {/* Slidder images */}
+      <div>
+        <About />
+      </div>
+      {/* Slider images */}
+      <div className="mt-4">
+        <MarqueeImages />
+      </div>
       {/* why us */}
+      <div></div>
       {/* students opinion */}
       {/* our directions */}
       {/* courses */}

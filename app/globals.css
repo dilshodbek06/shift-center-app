@@ -90,3 +90,17 @@ body {
   box-shadow: -78.67px 38.67px 78.67px 20px rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(350px);
 }
+
+.about-div {
+  box-shadow: -21px 21px 21px 0px #ffffff1a inset,
+    21px -21px 21px 0px #a5a5a51a inset;
+
+  backdrop-filter: blur(42px);
+}
+
+.marquee-div-outer {
+  box-shadow: -66px 66px 66px 0px #ffffff1a inset,
+    66px -66px 66px 0px #a5a5a51a inset;
+
+  backdrop-filter: blur(132px);
+}
