@@ -1,6 +1,7 @@
 import About from "./_components/about";
 import Hero from "./_components/hero";
 import MarqueeImages from "./_components/marquee-images";
+import OurDirections from "./_components/our-directions";
 import StudentOpinion from "./_components/student-opinion";
 import WhyUs from "./_components/why-us";
 
@@ -28,6 +29,9 @@ export default function Home() {
         <StudentOpinion />
       </div>
       {/* our directions */}
+      <div className="p-2 md:p-3">
+        <OurDirections />
+      </div>
       {/* courses */}
       {/* CONSULTATION */}
       {/* our location */}
