@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Group {
+  id         String      @id @default(uuid())
+  name       String
+  teacher    Teacher     @relation(fields: [teacherId], references: [id])
+  teacherId  String
+  timeTables TimeTable[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model TimeTable {
+  id                String             @id @default(uuid())
+  group             Group              @relation(fields: [groupId], references: [id])
+  groupId           String
+  price             Float
+  studentTimeTables StudentTimeTable[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+}
+
+model StudentTimeTable {
+  id String @id @default(uuid())
+
+  student   Student? @relation(fields: [studentId], references: [id])
+  studentId String? // Allow null if no student is yet assigned
+
+  timetableId String
+  timetable   TimeTable @relation(fields: [timetableId], references: [id])
+
+  paid        Boolean             @default(false)
+  attendances StudentAttendance[]
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+}
+
+model Student {
+  id                String             @id @default(uuid())
+  name              String
+  email             String             @unique
+  phone             String
+  profileImage      String
+  gender            Gender
+  parentsTelegramId String?
+  studentTimeTables StudentTimeTable[] // Allow enrollment in multiple time tables
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+}
+
+model Admin {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Gender {
+  Male
+  Female
+}
+
+model Teacher {
+  id           String   @id @default(uuid())
+  firstname    String
+  lastname     String
+  email        String   @unique
+  password     String
+  profileImage String?
+  gender       Gender
+  profession   String
+  phone        String
+  groups       Group[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model StudentAttendance {
+  id                 String           @id @default(uuid())
+  studentTimeTable   StudentTimeTable @relation(fields: [studentTimeTableId], references: [id])
+  studentTimeTableId String
+  month              Int?
+  mark               Int?
+  isComing           Boolean          @default(false)
+  lesson             Lesson           @relation(fields: [lessonId], references: [id])
+  lessonId           String
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+}
+
+model Lesson {
+  id          String              @id @default(uuid())
+  name        String
+  file        String? // File URL for lesson materials
+  description String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  attendances StudentAttendance[]
+}

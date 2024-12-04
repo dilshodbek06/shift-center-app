@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Josefin_Sans } from "next/font/google";
+import { ToastProvider } from "@/components/providers/toast-provider";
 
 export const metadata: Metadata = {
   title: "Shift Academy o'quv markazi",
@@ -17,7 +18,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={josefin.className}>
-        <div className="bg-[#001E36] min-h-screen">{children}</div>
+        <div className="bg-[#001E36] min-h-screen">
+          <ToastProvider />
+          {children}
+        </div>
       </body>
     </html>
   );
