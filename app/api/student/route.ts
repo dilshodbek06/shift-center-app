@@ -5,15 +5,8 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const {
-      firstname,
-      lastname,
-      email,
-      password,
-      phone,
-      gender,
-      profession,
-    } = await req.json();
+    const { name, email, profileImage, phone, gender, parentsTelegramId } =
+      await req.json();
 
     const cookie = cookies().get("session")?.value;
     const session = await decrypt(cookie);
@@ -22,21 +15,20 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const newTeacher = await prisma.teacher.create({
+    const newStudent = await prisma.student.create({
       data: {
         email,
-        password,
         gender,
+        name,
         phone,
-        firstname,
-        lastname,
-        profession,
+        profileImage,
+        parentsTelegramId,
       },
     });
 
-    return NextResponse.json(newTeacher);
+    return NextResponse.json(newStudent);
   } catch (error) {
-    console.log("[CREATE_TEACHER]", error);
+    console.log("[CREATE_STUDENT]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

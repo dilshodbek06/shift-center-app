@@ -13,7 +13,11 @@ interface StudentGroupCardProps {
   totalStudents: number;
 }
 
-export function StudentGroupCard() {
+export function StudentGroupCard({
+  name,
+  totalStudents,
+  id,
+}: StudentGroupCardProps) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
 
@@ -29,7 +33,7 @@ export function StudentGroupCard() {
         {isEditing ? (
           <Input className="w-full max-w-[200px]" />
         ) : (
-          <CardTitle className="text-lg">G-59</CardTitle>
+          <CardTitle className="text-lg">{name}</CardTitle>
         )}
 
         <div className="flex space-x-1">
@@ -56,7 +60,7 @@ export function StudentGroupCard() {
           )}
           {!isEditing && (
             <Button
-              onClick={() => router.push(`/admin/group/1`)}
+              onClick={() => router.push(`/admin/group/${id}`)}
               title="view details"
               variant="ghost"
               size="icon"
@@ -68,7 +72,9 @@ export function StudentGroupCard() {
       </CardHeader>
 
       <CardFooter className="p-3">
-        <p className="text-sm text-muted-foreground">Total students: 12</p>
+        <p className="text-sm text-muted-foreground">
+          Total students: {totalStudents}
+        </p>
       </CardFooter>
     </Card>
   );

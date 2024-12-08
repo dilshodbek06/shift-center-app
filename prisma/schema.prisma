@@ -18,10 +18,12 @@ model Group {
 }
 
 model TimeTable {
-  id                String             @id @default(uuid())
-  group             Group              @relation(fields: [groupId], references: [id])
-  groupId           String
-  price             Float
+  id      String @id @default(uuid())
+  group   Group  @relation(fields: [groupId], references: [id])
+  groupId String
+  price   Float
+
+  lessons           Lesson[]
   studentTimeTables StudentTimeTable[]
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
@@ -56,12 +58,13 @@ model Student {
 }
 
 model Admin {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  password     String
+  profileImage String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 enum Gender {
@@ -100,9 +103,13 @@ model StudentAttendance {
 model Lesson {
   id          String              @id @default(uuid())
   name        String
+  isExam      Boolean             @default(false)
   file        String? // File URL for lesson materials
   description String?
   createdAt   DateTime            @default(now())
   updatedAt   DateTime            @updatedAt
   attendances StudentAttendance[]
+
+  timeTableId String?
+  TimeTable   TimeTable? @relation(fields: [timeTableId], references: [id])
 }

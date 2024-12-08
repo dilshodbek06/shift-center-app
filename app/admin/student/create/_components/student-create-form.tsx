@@ -21,58 +21,51 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import toast from "react-hot-toast";
-import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
-  firstname: z.string().min(2, {
-    message: "First name must be at least 2 characters.",
-  }),
-  lastname: z.string().min(2, {
-    message: "Last name must be at least 2 characters.",
+  name: z.string().min(2, {
+    message: "Full name must be at least 5 characters.",
   }),
   email: z.string().email({
     message: "Please enter a valid email address.",
   }),
-  password: z.string().min(8, {
-    message: "Password must be at least 8 characters.",
-  }),
   gender: z.enum(["Male", "Female"], {
     required_error: "Please select a gender.",
   }),
-  profession: z.string().min(2, {
-    message: "Profession must be at least 2 characters.",
+  profileImage: z.string().min(2, {
+    message: "Profile image url required.",
+  }),
+  parentsTelegramId: z.string().min(3, {
+    message: "Parent telegram ID required.",
   }),
   phone: z.string().regex(/^(\+998|998)?[0-9]{9}$/, {
     message: "Please enter a valid Uzbek phone number (e.g., +998901234567).",
   }),
 });
 
-export default function TeacherCreateForm() {
-  const [passwordShow, setPasswordShow] = useState(false);
+export default function StudentCreateForm() {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstname: "",
-      lastname: "",
+      name: "",
       email: "",
-      password: "",
-      gender: undefined,
-      profession: "",
       phone: "",
+      profileImage: "/avatar.svg",
+      gender: undefined,
+      parentsTelegramId: "",
     },
   });
   const { isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await axios.post("/api/teacher", values);
+      await axios.post("/api/student", values);
       toast.success("Created success.");
-      router.push("/admin/teacher");
+      router.push("/admin/student");
     } catch (error) {
       toast.error("Something went wrong.", error!);
     }
@@ -84,12 +77,12 @@ export default function TeacherCreateForm() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-3 lg:gap-6">
           <FormField
             control={form.control}
-            name="firstname"
+            name="name"
             render={({ field }) => (
               <FormItem className="w-full md:w-1/2">
-                <FormLabel>First Name</FormLabel>
+                <FormLabel>Full Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="John" {...field} />
+                  <Input placeholder="John Alexandro" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -97,12 +90,12 @@ export default function TeacherCreateForm() {
           />
           <FormField
             control={form.control}
-            name="lastname"
+            name="email"
             render={({ field }) => (
               <FormItem className="w-full md:w-1/2">
-                <FormLabel>Last Name</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="Doe" {...field} />
+                  <Input placeholder="any@gmail.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -112,16 +105,12 @@ export default function TeacherCreateForm() {
         <div className="flex flex-col md:flex-row  items-center justify-between gap-3 lg:gap-6">
           <FormField
             control={form.control}
-            name="email"
+            name="parentsTelegramId"
             render={({ field }) => (
               <FormItem className="w-full md:w-1/2">
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Parent Telegram ID</FormLabel>
                 <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="john.doe@example.com"
-                    {...field}
-                  />
+                  <Input type="text" placeholder="21312432" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -129,30 +118,14 @@ export default function TeacherCreateForm() {
           />
           <FormField
             control={form.control}
-            name="password"
+            name="phone"
             render={({ field }) => (
-              <FormItem className="w-full md:w-1/2 relative">
-                <FormLabel>Password</FormLabel>
+              <FormItem className="w-full md:w-[49%]">
+                <FormLabel>Phone</FormLabel>
                 <FormControl>
-                  <Input
-                    type={passwordShow ? "text" : "password"}
-                    placeholder="********"
-                    {...field}
-                  />
+                  <Input placeholder="+998991234567" {...field} />
                 </FormControl>
                 <FormMessage />
-
-                {passwordShow ? (
-                  <EyeOff
-                    onClick={() => setPasswordShow(false)}
-                    className="size-6 text-white absolute top-[45%] right-2 cursor-pointer hover:text-blue-500"
-                  />
-                ) : (
-                  <Eye
-                    onClick={() => setPasswordShow(true)}
-                    className="size-6 text-white absolute top-[45%] right-2 cursor-pointer hover:text-blue-500"
-                  />
-                )}
               </FormItem>
             )}
           />
@@ -184,33 +157,23 @@ export default function TeacherCreateForm() {
           />
           <FormField
             control={form.control}
-            name="profession"
+            name="profileImage"
             render={({ field }) => (
               <FormItem className="w-full md:w-1/2">
-                <FormLabel>Profession</FormLabel>
+                <FormLabel>Profile image</FormLabel>
                 <FormControl>
-                  <Input placeholder="Mathematics Teacher" {...field} />
+                  <Input
+                    disabled
+                    placeholder="/avatar.svg   (default image)"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
-        <div className="flex flex-col md:flex-row items-center justify-between gap-3 lg:gap-6">
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem className="w-full md:w-[49%]">
-                <FormLabel>Phone</FormLabel>
-                <FormControl>
-                  <Input placeholder="+998991234567" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-3 lg:gap-6"></div>
         <div className="flex justify-end">
           <Button
             disabled={isSubmitting}

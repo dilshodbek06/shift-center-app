@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { LayoutGrid, List } from "lucide-react";
+import Link from "next/link";
 
 const FilterSettingsNavbar = () => {
   return (
@@ -22,7 +23,11 @@ const FilterSettingsNavbar = () => {
         </Button>
       </div>
       <div>
-        <Button className="bg-[#31A8FF]  hover:bg-[#219bf1]">+ Add new</Button>
+        <Link href="/admin/student/create">
+          <Button className="bg-[#31A8FF]  hover:bg-[#219bf1]">
+            + Add new
+          </Button>
+        </Link>
       </div>
     </div>
   );

@@ -1,27 +1,21 @@
-import { columns, Teacher } from "./_components/columns";
+import prisma from "@/lib/db";
+import { columns } from "./_components/columns";
 import { DataTable } from "./_components/data-table";
 import FilterSettingsNavbar from "./_components/filter-settings-navbar";
 
-const data: Teacher[] = [
-  {
-    id: "728ed52f",
-    email: "m@example.com",
-    gender: "Male",
-    joiningDate: new Date().toLocaleDateString() as unknown as Date,
-    name: "Salom",
-    phone: "",
-    profession: "",
-    profileImage: "",
-  },
-  // ...
-];
 
-const TeacherPage = () => {
+const TeacherPage = async () => {
+  const teachersData = await prisma.teacher.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
   return (
     <div className="text-white">
       <FilterSettingsNavbar />
       <div className="mt-2">
-        <DataTable columns={columns} data={data} />
+        <DataTable columns={columns} data={teachersData} />
       </div>
     </div>
   );
