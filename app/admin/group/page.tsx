@@ -30,19 +30,22 @@ const GroupPage = async () => {
     <div className="text-white">
       <AddGroupForm teachers={teachers} />
       <div className="mt-2 grid grid-cols-1 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4 gap-3">
-        {groups.map((group, ind) => (
-          <StudentGroupCard
-            key={ind}
-            name={group.name}
-            id={group.id}
-            totalStudents={
-              group?.timeTables.length > 0
-                ? group.timeTables[group.timeTables.length - 1]
-                    ?.studentTimeTables?.length
-                : 0
-            }
-          />
-        ))}
+        {groups.map((group) => {
+          const totalStudents = group.timeTables.reduce(
+            (count, timeTable) =>
+              count + (timeTable.studentTimeTables?.length || 0),
+            0
+          );
+
+          return (
+            <StudentGroupCard
+              key={group.id}
+              name={group.name}
+              id={group.id}
+              totalStudents={totalStudents}
+            />
+          );
+        })}
       </div>
     </div>
   );

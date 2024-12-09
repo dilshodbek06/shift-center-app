@@ -9,11 +9,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreVertical, Pencil } from "lucide-react";
+import { CalendarClock, MoreVertical, Pencil } from "lucide-react";
 import TimeTableModal from "./time-table-modal";
 import { useState } from "react";
 import AddStudentModal from "./add-student-modal";
-import { Lesson } from "@prisma/client";
+import { Lesson, Student } from "@prisma/client";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -80,21 +80,70 @@ type CustomGroupTimeTables = {
 
 interface LessonsTableProps {
   groupId: string;
+  studentsData: Student[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: CustomGroupTimeTables[];
 }
 
-const LessonsTable = ({ groupId, data }: LessonsTableProps) => {
+const LessonsTable = ({ groupId, data, studentsData }: LessonsTableProps) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [studentModalOpen, setStudentModalOpen] = useState(false);
   const [examLoading, setExamLoading] = useState(false);
+  const [selectedTimeTableId, setSelectedTimeTableId] = useState<string>(
+    data[0]?.id || ""
+  );
 
+  // check lesson is Exam
   const handleCheckLessonIsExam = async (check: boolean, lessonId: string) => {
     try {
       setExamLoading(true);
       await axios.patch(`/api/lesson/${lessonId}/exam`, {
         isExam: check,
+      });
+      router.refresh();
+      toast.success("Updated success.");
+    } catch (error) {
+      toast.error("Something went wrong.", error!);
+    } finally {
+      setExamLoading(false);
+    }
+  };
+
+  // mark is come student
+  const handleStudentIsCome = async (
+    studentId: string | undefined,
+    attendanceId: string,
+    isCome: boolean
+  ) => {
+    try {
+      setExamLoading(true);
+      await axios.post(`/api/lesson/exam`, {
+        attendanceId,
+        studentId,
+        isCome,
+      });
+      router.refresh();
+      toast.success("Updated success.");
+    } catch (error) {
+      toast.error("Something went wrong.", error!);
+    } finally {
+      setExamLoading(false);
+    }
+  };
+
+  // mark student
+  const handleChangeStudentMark = async (
+    mark: string,
+    studentId: string | undefined,
+    attendanceId: string
+  ) => {
+    try {
+      setExamLoading(true);
+      await axios.post(`/api/lesson/mark`, {
+        attendanceId,
+        studentId,
+        mark: parseInt(mark),
       });
       router.refresh();
       toast.success("Updated success.");
@@ -120,8 +169,11 @@ const LessonsTable = ({ groupId, data }: LessonsTableProps) => {
         <div className="flex min-h-[60px] items-center gap-x-1 overflow-x-auto">
           {data.map((item, ind) => (
             <div
+              onClick={() => setSelectedTimeTableId(item.id)}
               key={ind}
-              className={`cursor-pointer text-white select-none rounded-md px-3 py-1 bg-[#31A8FF] hover:bg-[#2499ec] flex flex-col items-center`}
+              className={` ${
+                item.id === selectedTimeTableId && "bg-[#31A8FF]"
+              } cursor-pointer border border-[#31A8FF] text-white select-none rounded-md   px-3 py-1 hover:bg-[#2499ec] flex flex-col items-center`}
             >
               <div className="flex justify-center my-1 cursor-pointer">
                 <Pencil className="size-5" />
@@ -146,8 +198,9 @@ const LessonsTable = ({ groupId, data }: LessonsTableProps) => {
         >
           Add Student
         </Button>
-        <Button className="bg-transparent border  text-white hover:bg-[#31A8FF] ">
-          Close day
+        <Button className="bg-transparent border  text-white hover:bg-[#31A8FF] flex items-center gap-x-2">
+          <span className="mt-[2px]">Close day</span>{" "}
+          <CalendarClock className="size-5" />
         </Button>
       </div>
       {/* students data table */}
@@ -157,10 +210,15 @@ const LessonsTable = ({ groupId, data }: LessonsTableProps) => {
             <thead className="bg-gray-100">
               <tr>
                 <th className="px-6 py-3 border border-gray-300 text-center text-sm font-bold text-gray-700">
-                  Students=13
+                  Students=
+                  {
+                    data.filter((d) => d.id === selectedTimeTableId)[0]
+                      ?.studentTimeTables?.length
+                  }
                 </th>
-                {data[0]?.lessons
-                  .slice()
+                {data
+                  .filter((t) => t.id === selectedTimeTableId)[0]
+                  ?.lessons.slice()
                   .sort((a, b) => {
                     const numA = parseInt(a.name.split("-")[1], 10);
                     const numB = parseInt(b.name.split("-")[1], 10);
@@ -198,122 +256,92 @@ const LessonsTable = ({ groupId, data }: LessonsTableProps) => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="border border-gray-300 text-sm text-gray-600">
-                  <div className="relative h-[70px] flex justify-center items-center">
-                    <button className="w-[20px] h-[20px] rounded-md bg-red-500 hover:bg-red-600 absolute top-1 right-1 text-white ">
-                      x
-                    </button>
-                    <h2 className="font-bold">Rustam Tursunov</h2>
-                  </div>
-                </td>
-                {Array.from({ length: 12 }, (_, index) => (
-                  <td
-                    key={index}
-                    className="border border-gray-300 text-sm text-gray-600"
-                  >
-                    <div className="h-[70px] min-w-[160px] flex justify-center items-center relative">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-x-1">
-                          <p>homework=</p>
-                          <select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block ">
-                            <option value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                          </select>
-                        </div>
-                        <div className="flex items-center gap-x-1">
-                          <label
-                            htmlFor="isCome"
-                            className="flex items-center gap-x-1"
-                          >
-                            <span>Kelganmi</span>
-                            <input id="isCome" type="checkbox" />
-                          </label>
-                        </div>
+              {data
+                .filter((d) => d.id === selectedTimeTableId)[0]
+                ?.studentTimeTables?.map((item, index) => (
+                  <tr key={index}>
+                    <td className="border border-gray-300 text-sm text-gray-600">
+                      <div className="relative h-[70px] flex justify-center items-center">
+                        <button className="w-[20px] h-[20px] rounded-md bg-red-500  hover:bg-red-600 absolute top-1 right-1 text-white ">
+                          x
+                        </button>
+                        <h2 className="font-bold text-center">
+                          {item?.student?.name}
+                        </h2>
                       </div>
-                      <div className="absolute top-1 right-1">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-4 w-4 p-0">
-                              <span className="sr-only">Open menu</span>
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem>Copy link</DropdownMenuItem>
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>Delete</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </div>
-                  </td>
+                    </td>
+                    {item?.attendances?.map((atten, ind) => (
+                      <td
+                        key={ind}
+                        className="border border-gray-300 text-sm text-gray-600"
+                      >
+                        <div className="h-[70px] min-w-[160px] flex justify-center items-center relative">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-x-1">
+                              <p>homework=</p>
+                              <select
+                                id={atten.id}
+                                onChange={(e) =>
+                                  handleChangeStudentMark(
+                                    e.target.value,
+                                    item.student?.id,
+                                    atten.id
+                                  )
+                                }
+                                value={atten.mark?.toString()}
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block "
+                              >
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                              </select>
+                            </div>
+                            <div className="flex items-center gap-x-1">
+                              <label
+                                htmlFor={`isCome-${atten.id}`}
+                                className="flex items-center gap-x-1"
+                              >
+                                <span>Kelganmi</span>
+                                <input
+                                  onChange={(e) =>
+                                    handleStudentIsCome(
+                                      item?.student?.id,
+                                      atten.id,
+                                      e.target.checked
+                                    )
+                                  }
+                                  id={`isCome-${atten.id}`}
+                                  type="checkbox"
+                                  checked={atten.isComing}
+                                />
+                              </label>
+                            </div>
+                          </div>
+                          <div className="absolute top-1 right-1">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="h-4 w-4 p-0">
+                                  <span className="sr-only">Open menu</span>
+                                  <MoreVertical className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuItem>Copy link</DropdownMenuItem>
+                                <DropdownMenuItem>Edit</DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>Delete</DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        </div>
+                      </td>
+                    ))}
+                  </tr>
                 ))}
-              </tr>
-              <tr>
-                <td className="border border-gray-300 text-sm text-gray-600">
-                  <div className="relative h-[70px] flex justify-center items-center">
-                    <button className="w-[20px] h-[20px] rounded-md bg-red-500 hover:bg-red-600 absolute top-1 right-1 text-white ">
-                      x
-                    </button>
-                    <h2 className="font-bold">Alisher Karimov</h2>
-                  </div>
-                </td>
-                {Array.from({ length: 12 }, (_, index) => (
-                  <td
-                    key={index}
-                    className="border border-gray-300 text-sm text-gray-600"
-                  >
-                    <div className="h-[70px] min-w-[160px] flex justify-center items-center relative">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-x-1">
-                          <p>homework=</p>
-                          <select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block ">
-                            <option value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                          </select>
-                        </div>
-                        <div className="flex items-center gap-x-1">
-                          <label
-                            htmlFor="isCome"
-                            className="flex items-center gap-x-1"
-                          >
-                            <span>Kelganmi</span>
-                            <input id="isCome" type="checkbox" />
-                          </label>
-                        </div>
-                      </div>
-                      <div className="absolute top-1 right-1">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-4 w-4 p-0">
-                              <span className="sr-only">Open menu</span>
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem>Copy link</DropdownMenuItem>
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>Delete</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </div>
-                  </td>
-                ))}
-              </tr>
             </tbody>
           </table>
         </div>
@@ -327,6 +355,15 @@ const LessonsTable = ({ groupId, data }: LessonsTableProps) => {
           groupId={groupId}
         />
         <AddStudentModal
+          addedStudents={
+            data
+              .find((d) => d?.id === selectedTimeTableId)
+              ?.studentTimeTables?.map((item) => item.student?.id || "")
+              .filter((id): id is string => id !== "") || []
+          }
+          data={studentsData}
+          groupId={groupId}
+          timeTableId={selectedTimeTableId}
           handleClose={() => setStudentModalOpen(false)}
           open={studentModalOpen}
           setIsOpen={() => setStudentModalOpen(false)}

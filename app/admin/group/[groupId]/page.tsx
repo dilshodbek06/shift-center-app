@@ -12,12 +12,19 @@ const GroupIdPage = async ({
     },
     include: {
       group: true,
-      lessons: true,
+      lessons: {
+        orderBy: {
+          name: "asc",
+        },
+      },
       studentTimeTables: {
         include: {
           attendances: {
             include: {
               lesson: true,
+            },
+            orderBy: {
+              lessonOrder: "asc",
             },
           },
           student: true,
@@ -27,9 +34,19 @@ const GroupIdPage = async ({
     },
   });
 
+  const allStudents = await prisma.student.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
   return (
     <div className="text-white">
-      <LessonsTable groupId={groupId} data={currentGroupTimeTables} />
+      <LessonsTable
+        studentsData={allStudents}
+        groupId={groupId}
+        data={currentGroupTimeTables}
+      />
     </div>
   );
 };

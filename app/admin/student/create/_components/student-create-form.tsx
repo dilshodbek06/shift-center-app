@@ -59,13 +59,19 @@ export default function StudentCreateForm() {
       parentsTelegramId: "",
     },
   });
+  const selectedGender: "Male" | "Female" = form.watch("gender");
   const { isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await axios.post("/api/student", values);
+      await axios.post("/api/student", {
+        ...values,
+        profileImage:
+          selectedGender === "Male" ? "/avatar.svg" : "/avatar2.svg",
+      });
       toast.success("Created success.");
       router.push("/admin/student");
+      router.refresh();
     } catch (error) {
       toast.error("Something went wrong.", error!);
     }

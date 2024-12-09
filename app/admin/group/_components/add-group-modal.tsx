@@ -44,6 +44,7 @@ const AddGroupModal = ({
       setLoading(true);
       await axios.post("/api/group", { groupName, teacherId });
       router.push("/admin/group");
+      router.refresh();
       toast.success("Created success.");
       handleClose();
     } catch (error) {

@@ -1,9 +1,18 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { Student } from "@prisma/client";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { Drawer } from "vaul";
 
 interface AddStudentModalProps {
+  data: Student[];
   open: boolean;
+  groupId: string;
+  timeTableId: string;
+  addedStudents: string[];
   setIsOpen: () => void;
   handleClose: () => void;
 }
@@ -12,9 +21,48 @@ const AddStudentModal = ({
   handleClose,
   open,
   setIsOpen,
+  data,
+  groupId,
+  timeTableId,
+  addedStudents,
 }: AddStudentModalProps) => {
   //
-  const handleSave = () => {};
+  const router = useRouter();
+  const [selectedStudents, setSelectedStudents] = useState<Set<string>>(
+    new Set()
+  );
+
+  const [loading, setLoading] = useState(false);
+
+  // Handle checkbox change
+  const handleCheckboxChange = (studentId: string, isChecked: boolean) => {
+    setSelectedStudents((prev) => {
+      const updated = new Set(prev);
+      if (isChecked) {
+        updated.add(studentId);
+      } else {
+        updated.delete(studentId);
+      }
+      return updated;
+    });
+  };
+
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+      const selected = Array.from(selectedStudents).map(String);
+      await axios.post(`/api/group/${groupId}/timetable/add-student`, {
+        timeTableId,
+        students: selected,
+      });
+      router.refresh();
+      handleClose();
+    } catch (error) {
+      toast.error("Something went wrong.", error!);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div>
@@ -32,13 +80,37 @@ const AddStudentModal = ({
                 className="mx-auto w-12 h-1.5 rounded-full bg-gray-300 mb-6"
               />
               <h2 className="font-bold text-center md:text-xl">
-                Create new Student
+                Choose Students
               </h2>
               {/* Forms */}
               <div className="overflow-y-auto scrollbar-thin max-h-[20rem]">
-                <div className="min-h-[420px] mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 overflow-y-auto">
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                  Asperiores, enim?
+                <div className="max-w-sm mt-3 mx-auto">
+                  {data.map((student, index) => (
+                    <div
+                      key={student.id}
+                      className="flex items-center gap-x-2 p-1 cursor-pointer"
+                    >
+                      <label
+                        htmlFor={index.toString()}
+                        className="flex items-center gap-x-2 cursor-pointer"
+                      >
+                        <input
+                          onChange={(e) =>
+                            handleCheckboxChange(student.id, e.target.checked)
+                          }
+                          id={index.toString()}
+                          type="checkbox"
+                          className="-mt-1"
+                          disabled={addedStudents.includes(student.id)}
+                          checked={
+                            addedStudents.includes(student.id) ||
+                            selectedStudents.has(student.id)
+                          }
+                        />
+                        <p className="font-semibold">{student.name}</p>
+                      </label>
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -51,8 +123,12 @@ const AddStudentModal = ({
                 >
                   Cancel
                 </Button>
-                <Button onClick={handleSave} className="md:px-6">
-                  Save
+                <Button
+                  disabled={loading}
+                  onClick={handleSave}
+                  className="md:px-6"
+                >
+                  {loading ? "Loading..." : "Save"}
                 </Button>
               </div>
             </div>

@@ -33,6 +33,7 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
+
   return (
     <div className="px-2">
       <div className="w-full min-w-[330px] sm:w-[390px] rounded-xl student-opinion-card p-[25px]">

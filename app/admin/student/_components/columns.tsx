@@ -11,18 +11,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Student = {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  profileImage: string;
-  gender: "Male" | "Female";
-  joiningDate: Date;
-};
+import { Student } from "@prisma/client";
+import { formatDateShort } from "@/helpers/date-format";
+import Image from "next/image";
+import TelegramIcon from "./telegram-icon";
 
 export const columns: ColumnDef<Student>[] = [
   {
@@ -35,15 +27,30 @@ export const columns: ColumnDef<Student>[] = [
   {
     accessorKey: "profileImage",
     header: "Profile",
+    cell: ({ row }) => {
+      const profileImage = row.original.profileImage;
+      return (
+        <div className="rounded-full">
+          <Image
+            alt="logo"
+            src={profileImage ?? "/avatar.svg"}
+            width={40}
+            height={40}
+          />
+        </div>
+      );
+    },
   },
   {
     accessorKey: "name",
-    header: "Name",
+    header: "FullName",
   },
+
   {
     accessorKey: "gender",
     header: "Gender",
   },
+
   {
     accessorKey: "phone",
     header: "Phone",
@@ -53,8 +60,20 @@ export const columns: ColumnDef<Student>[] = [
     header: "Email",
   },
   {
-    accessorKey: "joiningDate",
+    accessorKey: "parentsTelegramId",
+    header: () => (
+      <div className="flex items-center gap-x-1">
+        <span className=" h-fit">Parent</span> <TelegramIcon />
+      </div>
+    ),
+  },
+  {
+    accessorKey: "createdAt",
     header: "Joining Date",
+    cell: ({ row }) => {
+      const currentDate = row.original.createdAt;
+      return <div>{formatDateShort(currentDate)}</div>;
+    },
   },
   {
     accessorKey: "actions",

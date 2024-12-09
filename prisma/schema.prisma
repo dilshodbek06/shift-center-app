@@ -92,7 +92,8 @@ model StudentAttendance {
   studentTimeTable   StudentTimeTable @relation(fields: [studentTimeTableId], references: [id])
   studentTimeTableId String
   month              Int?
-  mark               Int?
+  mark               Int              @default(0)
+  lessonOrder        Int
   isComing           Boolean          @default(false)
   lesson             Lesson           @relation(fields: [lessonId], references: [id])
   lessonId           String
