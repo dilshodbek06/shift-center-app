@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CalendarClock, MoreVertical, Pencil } from "lucide-react";
+import { CalendarClock, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import TimeTableModal from "./time-table-modal";
 import { useState } from "react";
 import AddStudentModal from "./add-student-modal";
@@ -73,6 +74,7 @@ type CustomGroupTimeTables = {
         description: string | null;
         createdAt: Date;
         updatedAt: Date;
+        isClose: boolean;
       };
     }>;
   }>;
@@ -90,6 +92,7 @@ const LessonsTable = ({ groupId, data, studentsData }: LessonsTableProps) => {
   const [open, setOpen] = useState(false);
   const [studentModalOpen, setStudentModalOpen] = useState(false);
   const [examLoading, setExamLoading] = useState(false);
+  const [closeDayLoading, setCloseDayLoading] = useState(false);
   const [selectedTimeTableId, setSelectedTimeTableId] = useState<string>(
     data[0]?.id || ""
   );
@@ -154,7 +157,22 @@ const LessonsTable = ({ groupId, data, studentsData }: LessonsTableProps) => {
     }
   };
 
-  if (examLoading) {
+  const handleCloseDay = async (lessonId: string) => {
+    try {
+      setCloseDayLoading(true);
+      await axios.post(`/api/lesson/close`, {
+        lessonId,
+        timeTableId: selectedTimeTableId,
+      });
+      router.refresh();
+    } catch (error: any) {
+      toast.error(error?.message ?? "Something went wrong.");
+    } finally {
+      setCloseDayLoading(false);
+    }
+  };
+
+  if (examLoading || closeDayLoading) {
     return (
       <div>
         <PageLoader />
@@ -190,19 +208,18 @@ const LessonsTable = ({ groupId, data, studentsData }: LessonsTableProps) => {
           Add
         </Button>
       </div>
-      {/* [add student or close day] form */}
-      <div className="my-1 flex items-center gap-1">
-        <Button
-          onClick={() => setStudentModalOpen(true)}
-          className="bg-transparent border px-4 text-white hover:bg-[#31A8FF] "
-        >
-          Add Student
-        </Button>
-        <Button className="bg-transparent border  text-white hover:bg-[#31A8FF] flex items-center gap-x-2">
-          <span className="mt-[2px]">Close day</span>{" "}
-          <CalendarClock className="size-5" />
-        </Button>
-      </div>
+      {/* add student or close day form */}
+      {data?.length > 0 && (
+        <div className="my-1 flex items-center gap-1">
+          <Button
+            onClick={() => setStudentModalOpen(true)}
+            className="bg-transparent border px-4 text-white hover:bg-[#31A8FF] "
+          >
+            Add Student
+          </Button>
+        </div>
+      )}
+
       {/* students data table */}
       {data.length > 0 && (
         <div className="overflow-x-auto">
@@ -227,8 +244,11 @@ const LessonsTable = ({ groupId, data, studentsData }: LessonsTableProps) => {
                   .map((lesson, index) => (
                     <th
                       key={index}
-                      className={`px-6 py-3 border border-gray-300 text-left text-sm font-medium text-gray-700 ${
+                      className={`px-6 py-3 border border-gray-300 text-left text-sm font-medium text-gray-700 relative ${
                         lesson.isExam && "text-white bg-slate-700"
+                      }  ${
+                        lesson.isClose &&
+                        "pointer-events-none opacity-50 cursor-not-allowed"
                       }`}
                     >
                       <div className="text-center gap-y-2 flex flex-col items-center">
@@ -250,6 +270,34 @@ const LessonsTable = ({ groupId, data, studentsData }: LessonsTableProps) => {
                             type="checkbox"
                           />
                         </label>
+                        <div className="absolute top-1 right-1">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" className="h-4 w-4 p-0">
+                                <span className="sr-only">Open menu</span>
+                                <MoreVertical className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() => handleCloseDay(lesson.id)}
+                              >
+                                <div className="flex group items-center w-full justify-between">
+                                  <span>Close day</span>
+                                  <CalendarClock className="-mt-1 w-4 h-4 group-hover:text-blue-500" />
+                                </div>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <div className="flex group items-center w-full justify-between">
+                                  <span>Delete day</span>
+                                  <Trash2 className="-mt-1 w-4 h-4 group-hover:text-red-500" />
+                                </div>
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
                       </div>
                     </th>
                   ))}
@@ -273,13 +321,17 @@ const LessonsTable = ({ groupId, data, studentsData }: LessonsTableProps) => {
                     {item?.attendances?.map((atten, ind) => (
                       <td
                         key={ind}
-                        className="border border-gray-300 text-sm text-gray-600"
+                        className={`border border-gray-300 text-sm text-gray-600 ${
+                          atten.lesson.isClose &&
+                          "pointer-events-none opacity-50 cursor-not-allowed"
+                        }`}
                       >
                         <div className="h-[70px] min-w-[160px] flex justify-center items-center relative">
                           <div className="space-y-1">
                             <div className="flex items-center gap-x-1">
                               <p>homework=</p>
                               <select
+                                disabled={!atten.isComing}
                                 id={atten.id}
                                 onChange={(e) =>
                                   handleChangeStudentMark(
@@ -289,7 +341,7 @@ const LessonsTable = ({ groupId, data, studentsData }: LessonsTableProps) => {
                                   )
                                 }
                                 value={atten.mark?.toString()}
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block "
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm disabled:cursor-not-allowed focus:ring-blue-500 focus:border-blue-500 block "
                               >
                                 <option value="0">0</option>
                                 <option value="1">1</option>
@@ -319,23 +371,6 @@ const LessonsTable = ({ groupId, data, studentsData }: LessonsTableProps) => {
                                 />
                               </label>
                             </div>
-                          </div>
-                          <div className="absolute top-1 right-1">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="h-4 w-4 p-0">
-                                  <span className="sr-only">Open menu</span>
-                                  <MoreVertical className="h-4 w-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem>Copy link</DropdownMenuItem>
-                                <DropdownMenuItem>Edit</DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem>Delete</DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
                           </div>
                         </div>
                       </td>

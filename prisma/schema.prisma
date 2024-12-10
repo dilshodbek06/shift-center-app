@@ -105,6 +105,7 @@ model Lesson {
   id          String              @id @default(uuid())
   name        String
   isExam      Boolean             @default(false)
+  isClose     Boolean             @default(false)
   file        String? // File URL for lesson materials
   description String?
   createdAt   DateTime            @default(now())
