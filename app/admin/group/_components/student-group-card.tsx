@@ -2,10 +2,12 @@
 
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, Edit, Eye, Trash2, X } from "lucide-react";
+import { Check, Edit, Eye, LoaderCircle, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 interface StudentGroupCardProps {
   id: string;
@@ -20,9 +22,25 @@ export function StudentGroupCard({
 }: StudentGroupCardProps) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
+  const [editingName, setEditingName] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
-  const handleEdit = () => {
-    if (isEditing) {
+  const handleEdit = async () => {
+    if (!isEditing) {
+      setEditingName(name);
+    } else {
+      try {
+        setLoading(true);
+        await axios.patch(`/api/group/${id}`, {
+          groupName: editingName,
+        });
+        router.refresh();
+        toast.success("Updated success.");
+      } catch (error) {
+        toast.error("Something went wrong.", error!);
+      } finally {
+        setLoading(false);
+      }
     }
     setIsEditing(!isEditing);
   };
@@ -31,7 +49,11 @@ export function StudentGroupCard({
     <Card className="w-full max-w-md hover:translate-y-1 transition-all duration-300">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3">
         {isEditing ? (
-          <Input className="w-full max-w-[200px]" />
+          <Input
+            onChange={(e) => setEditingName(e.target.value)}
+            value={editingName}
+            className="w-full max-w-[200px]"
+          />
         ) : (
           <CardTitle className="text-lg">{name}</CardTitle>
         )}
@@ -39,7 +61,11 @@ export function StudentGroupCard({
         <div className="flex space-x-1">
           <Button variant="ghost" size="icon" onClick={handleEdit}>
             {isEditing ? (
-              <Check className="h-4 w-4" />
+              loading ? (
+                <LoaderCircle className="h-4 w-4 animate-spin" />
+              ) : (
+                <Check className="h-4 w-4" />
+              )
             ) : (
               <Edit className="h-4 w-4" />
             )}
