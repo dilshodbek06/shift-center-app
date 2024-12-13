@@ -89,9 +89,8 @@ model Teacher {
 
 model StudentAttendance {
   id                 String           @id @default(uuid())
-  studentTimeTable   StudentTimeTable @relation(fields: [studentTimeTableId], references: [id])
+  studentTimeTable   StudentTimeTable @relation(fields: [studentTimeTableId], references: [id], onDelete: Cascade)
   studentTimeTableId String
-  month              Int?
   mark               Int              @default(0)
   lessonOrder        Int
   isComing           Boolean          @default(false)
@@ -114,4 +113,15 @@ model Lesson {
 
   timeTableId String?
   TimeTable   TimeTable? @relation(fields: [timeTableId], references: [id])
+}
+
+model Blog {
+  id          String   @id @default(uuid())
+  title       String
+  content     String
+  author      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  isPublished Boolean  @default(false)
+  tags        String[]
 }

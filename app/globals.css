@@ -138,3 +138,16 @@ body {
     37.7px -37.7px 37.7px 0px #a5a5a51a inset;
   backdrop-filter: blur(75.4000015258789px);
 }
+
+/* .ql-toolbar button svg {
+  color: white !important;
+  fill: white !important;
+}
+.ql-stroke,
+.ql-fill {
+  stroke: white !important;
+}
+.ql-active {
+  stroke: blue !important;
+  fill: blue !important;
+} */

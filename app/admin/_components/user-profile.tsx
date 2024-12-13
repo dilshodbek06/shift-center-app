@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState } from "react";
@@ -13,44 +14,55 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogOut, Settings } from "lucide-react";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 interface UserProfileProps {
   user: {
     name: string;
     email: string;
     avatarUrl?: string;
-  };
+  } | null;
 }
 
 export function UserProfile({ user }: UserProfileProps) {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
-  const handleLogout = () => {
-    console.log("Logout clicked");
-    // Implement your logout logic here
+  const handleLogout = async () => {
+    try {
+      await axios.post("/api/user/logout");
+    } catch (error) {
+      router.push("/sign-in");
+    }
   };
 
   const handleSettingsClick = () => {
-    console.log("Settings clicked");
-    // Implement your settings navigation logic here
+    router.push("/admin/settings");
   };
+
+  const fallbackInitial = user?.name ? user.name.charAt(0).toUpperCase() : "U";
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={user.avatarUrl} alt={user.name} />
-            <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+            <AvatarImage
+              src={user?.avatarUrl || "/profile.jpg"}
+              alt={user?.name || "user"}
+            />
+            <AvatarFallback>{fallbackInitial}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user.name}</p>
+            <p className="text-sm font-medium leading-none">{user?.name}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              {user.email}
+              {user?.email}
             </p>
           </div>
         </DropdownMenuLabel>

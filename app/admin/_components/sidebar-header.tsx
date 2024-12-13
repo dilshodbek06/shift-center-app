@@ -1,19 +1,34 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { UserProfile } from "./user-profile";
 import Breadcrumb from "./breadcrumb";
 import ScreenElements from "./screen-elements";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { Admin, Teacher } from "@prisma/client";
 
 interface SidebarHeaderProps {
   elementRef: React.RefObject<HTMLDivElement>;
 }
 
 const SidebarHeader = ({ elementRef }: SidebarHeaderProps) => {
-  const user = {
-    name: "John Doe",
-    email: "john@example.com",
-    avatarUrl: "/profile.jpg",
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    fetchCurrentUser();
+  }, []);
+
+  const fetchCurrentUser = async () => {
+    try {
+      const { data } = await axios.get(`/api/user/me`);
+      setUser(data);
+    } catch (error) {
+      setUser(null);
+      toast.error("Something went wrong with fetch user.");
+    }
   };
 
   return (
@@ -29,7 +44,7 @@ const SidebarHeader = ({ elementRef }: SidebarHeaderProps) => {
         <div className="flex gap-x-2 items-center md:gap-x-9">
           <ScreenElements elementRef={elementRef} />
           <div className="pr-1 relative top-1">
-            <UserProfile user={user} />
+            <UserProfile user={user || null} />
           </div>
         </div>
       </div>

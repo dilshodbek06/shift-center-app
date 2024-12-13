@@ -3,7 +3,6 @@ import { columns } from "./_components/columns";
 import { DataTable } from "./_components/data-table";
 import FilterSettingsNavbar from "./_components/filter-settings-navbar";
 
-
 const TeacherPage = async () => {
   const teachersData = await prisma.teacher.findMany({
     orderBy: {
