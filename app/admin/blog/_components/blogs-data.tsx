@@ -28,6 +28,7 @@ const BlogsData = async () => {
               tags={blog.tags}
               title={blog.title}
               createdAt={blog.createdAt}
+              id={blog.id}
             />
           ))}
         </div>

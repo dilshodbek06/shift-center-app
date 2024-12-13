@@ -41,12 +41,12 @@ const adminRoutes = [
     icon: LayoutDashboard,
   },
   {
-    title: "Teacher",
+    title: "Teachers",
     url: "/admin/teacher",
     icon: FileUser,
   },
   {
-    title: "Student",
+    title: "Students",
     url: "/admin/student",
     icon: GraduationCap,
   },
@@ -56,7 +56,7 @@ const adminRoutes = [
     icon: Users,
   },
   {
-    title: "Blog",
+    title: "Blogs",
     url: "/admin/blog",
     icon: Newspaper,
   },

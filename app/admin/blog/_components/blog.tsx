@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { formatDateShort } from "@/helpers/date-format";
@@ -9,9 +10,10 @@ interface BlogProps {
   author: string;
   tags: string[];
   createdAt: Date;
+  id: string;
 }
 
-const Blog = ({ author, content, createdAt, tags, title }: BlogProps) => {
+const Blog = ({ author, content, createdAt, tags, title, id }: BlogProps) => {
   return (
     <div className="group cursor-pointer w-full  border border-gray-300 rounded-2xl p-5 transition-all duration-300 hover:border-[#31A8FF]">
       <div className="flex items-center mb-6">
@@ -23,7 +25,7 @@ const Blog = ({ author, content, createdAt, tags, title }: BlogProps) => {
       </div>
       <div className="block">
         <Link
-          href={`/admin/blog/`}
+          href={`/admin/blog/${id}`}
           className="hover:underline hover:text-[#219bf1]"
         >
           <h4 className="text-white hover:text-[#219bf1] font-medium leading-8 line-clamp-1 text-lg">
@@ -39,7 +41,7 @@ const Blog = ({ author, content, createdAt, tags, title }: BlogProps) => {
           {tags.map((tag, ind) => (
             <div
               key={ind}
-              className="text-gray-100 text-xs font-medium  px-2 py-0.5 rounded border border-[#31A8FF] hover:opacity-55"
+              className="text-gray-100 text-[10px] font-mono  px-2 py-0.5 rounded border border-[#31A8FF] hover:opacity-55"
             >
               {tag}
             </div>
