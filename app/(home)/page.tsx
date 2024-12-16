@@ -1,4 +1,5 @@
 import About from "./_components/about";
+import Blogs from "./_components/blogs";
 import Consultation from "./_components/consultation";
 import Courses from "./_components/courses";
 import Footer from "./_components/footer";
@@ -21,11 +22,11 @@ export default function Home() {
         <About />
       </div>
       {/* Slider images */}
-      <div className="mt-4">
+      <div className="mt-7">
         <MarqueeImages />
       </div>
       {/* why us */}
-      <div className="mt-[80px]">
+      <div className=" mt-[30px] md:mt-[80px]">
         <WhyUs />
       </div>
       {/* students opinion */}
@@ -40,12 +41,16 @@ export default function Home() {
       <div>
         <Courses />
       </div>
+      {/* blogs and news */}
+      <div>
+        <Blogs />
+      </div>
       {/* CONSULTATION */}
-      <div className="mt-10">
+      <div className="mt-6 md:mt-28">
         <Consultation />
       </div>
       {/* our location */}
-      <div className="mt-20">
+      <div className="mt-4 md:mt-20">
         <OurLocation />
       </div>
       {/* footer */}

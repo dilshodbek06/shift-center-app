@@ -29,6 +29,7 @@ const BlogsData = async () => {
               title={blog.title}
               createdAt={blog.createdAt}
               id={blog.id}
+              url={`/admin/blog/${blog.id}`}
             />
           ))}
         </div>

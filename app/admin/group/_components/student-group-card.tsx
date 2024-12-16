@@ -1,6 +1,12 @@
 "use client";
 
-import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Check, Edit, Eye, LoaderCircle, Trash2, X } from "lucide-react";
 import { useState } from "react";
@@ -13,12 +19,14 @@ interface StudentGroupCardProps {
   id: string;
   name: string;
   totalStudents: number;
+  teacherName: string;
 }
 
 export function StudentGroupCard({
   name,
   totalStudents,
   id,
+  teacherName,
 }: StudentGroupCardProps) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
@@ -97,9 +105,14 @@ export function StudentGroupCard({
         </div>
       </CardHeader>
 
+      <CardContent className="py-0 px-3">
+        <p className="text-sm text-muted-foreground">
+          <span className="font-semibold">Teacher:</span> {teacherName}
+        </p>
+      </CardContent>
       <CardFooter className="p-3">
         <p className="text-sm text-muted-foreground">
-          Total students: {totalStudents}
+          <span className="font-medium">Total students:</span> {totalStudents}
         </p>
       </CardFooter>
     </Card>

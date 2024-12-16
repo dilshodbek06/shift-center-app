@@ -1,6 +1,6 @@
 const MarqueeImages = () => {
   return (
-    <div className="marquee-div-outer pt-[70px] pb-[40px] text-white">
+    <div className="marquee-div-outer pt-[36px] md:pt-[70px] pb-[40px] text-white">
       <div className="relative overflow-hidden">
         {/* Marquee wrapper */}
         <div className="flex animate-marquee space-x-8">

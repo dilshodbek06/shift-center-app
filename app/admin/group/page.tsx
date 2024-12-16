@@ -48,6 +48,9 @@ const GroupPage = async () => {
               name={group.name}
               id={group.id}
               totalStudents={totalStudents}
+              teacherName={
+                group.teacher.firstname + " " + group.teacher.lastname
+              }
             />
           );
         })}

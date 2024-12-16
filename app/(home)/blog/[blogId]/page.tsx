@@ -3,18 +3,18 @@ import prisma from "@/lib/db";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
-const BlogDetailPage = async ({ params }: { params: { blogId: string } }) => {
+const BlogIdPage = async ({ params }: { params: { blogId: string } }) => {
   const currentBlog = await prisma.blog.findUnique({
     where: {
       id: params.blogId,
     },
   });
   if (!currentBlog) {
-    return redirect("/admin/blog");
+    return redirect("/");
   }
 
   return (
-    <div className="py-5">
+    <div className="py-5 px-3">
       <main>
         <article>
           <header className="mx-auto max-w-screen-xl text-center">
@@ -48,9 +48,9 @@ const BlogDetailPage = async ({ params }: { params: { blogId: string } }) => {
             </div>
           </header>
 
-          <div className="text-gray-200 mx-auto max-w-screen-md space-y-12 px-4 py-4 font-serif text-lg tracking-wide">
+          <div className="text-gray-200 mx-auto max-w-screen-md space-y-12 px-2 py-4 font-serif text-lg tracking-wide">
             <div
-              className="text-xl font-medium"
+              className="text-xl font-medium break-words"
               dangerouslySetInnerHTML={{ __html: currentBlog.content }}
             ></div>
           </div>
@@ -66,4 +66,4 @@ const BlogDetailPage = async ({ params }: { params: { blogId: string } }) => {
   );
 };
 
-export default BlogDetailPage;
+export default BlogIdPage;

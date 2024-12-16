@@ -26,10 +26,10 @@ const Analytics = async () => {
       </div>
       <div className="grid place-items-center">
         <ChartDiagram
-          blogVal={40}
-          groupVal={30}
-          studentVal={20}
-          teacherVal={10}
+          blogVal={blogsCount}
+          groupVal={groupsCount}
+          studentVal={studentsCount}
+          teacherVal={teachersCount}
         />
       </div>
     </div>

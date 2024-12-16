@@ -21,10 +21,18 @@ const LoginPage = () => {
     }
     try {
       setLoading(true);
+      let errorCode: number;
       if (role === "admin") {
-        await loginAdmin({ email, password });
+        const res = await loginAdmin({ email, password });
+        errorCode = res.status;
       } else {
-        await loginTeacher({ email, password });
+        const res = await loginTeacher({ email, password });
+        errorCode = res.status;
+      }
+      if (errorCode === 403) {
+        toast.error("Password is incorrect.");
+      } else if (errorCode === 404) {
+        toast.error("Email not found.");
       }
       setLoading(false);
     } catch (error) {

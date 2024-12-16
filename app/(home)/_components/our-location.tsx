@@ -2,13 +2,13 @@ const OurLocation = () => {
   return (
     <div className="relative pt-[20px]  pb-[20px] ">
       <div className="absolute w-[350px] h-[350px] left-div -bottom-1 left-[-400px] rounded-full "></div>
-      <div className="container max-w-6xl mx-auto px-3">
-        <h1 className="text-white font-bold text-4xl">
-        BIZNING MANZIL
+      <div className="container max-w-6xl mx-auto px-2 md:px-3">
+        <h1 className="text-white font-bold text-xl md:text-4xl">
+          BIZNING MANZIL
         </h1>
         <div className="mt-6 flex gap-5 flex-col md:flex-row">
           <div className="w-full hidden md:block md:w-3/5 border rounded-md bg-white"></div>
-          <div className="w-full md:w-2/5 rounded-xl consul-div p-[28px]">
+          <div className="w-full md:w-2/5 rounded-xl consul-div p-[15px] md:p-[28px]">
             <h1 className="text-white font-bold text-2xl mb-2">BUXORO</h1>
 
             <div className="min-h-[200px] bg-white rounded-xl"></div>

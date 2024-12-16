@@ -25,8 +25,9 @@ export async function GET() {
     if (!currentUser) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
+    currentUser.password = "";
 
-    return NextResponse.json(currentUser);
+    return NextResponse.json({ ...currentUser, role: session?.role });
   } catch (err) {
     console.error("Error fetching user:", err);
     return NextResponse.json(

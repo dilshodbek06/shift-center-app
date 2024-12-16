@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const CourseCard = () => {
   return (
-    <div className="bg-[#D9D9D91A] max-w-[560px] min-h-[200px] rounded-xl why-use-div pl-[24px] pt-[25px]">
+    <div className="bg-[#D9D9D91A] max-w-[560px] min-h-[140px] md:min-h-[200px] rounded-xl why-use-div pl-[24px] pt-[25px]">
       <div className="flex items-center gap-[34px] ">
         <div className="w-[80px] h-[80px] rounded-xl border relative">
           <Image alt="logo" src="/brand.svg" fill />

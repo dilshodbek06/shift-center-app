@@ -17,6 +17,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import axios from "axios";
 
 import {
   ChevronUp,
@@ -33,6 +34,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const adminRoutes = [
   {
@@ -72,8 +74,77 @@ const adminRoutes = [
   },
 ];
 
+const teacherRoutes = [
+  {
+    title: "Dashboard",
+    url: "/admin/dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    title: "Students",
+    url: "/admin/student",
+    icon: GraduationCap,
+  },
+  {
+    title: "Groups",
+    url: "/admin/group",
+    icon: Users,
+  },
+  {
+    title: "Blogs",
+    url: "/admin/blog",
+    icon: Newspaper,
+  },
+  {
+    title: "Settings",
+    url: "/admin/settings",
+    icon: Settings,
+  },
+  {
+    title: "Website",
+    url: "/",
+    icon: Home,
+  },
+];
+
+const useUserRole = () => {
+  const [role, setRole] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchCurrentUser = async () => {
+      try {
+        setLoading(true);
+        const { data } = await axios.get("/api/user/me");
+        if (isMounted) {
+          setRole(data?.role || "");
+        }
+      } catch (error) {
+        console.error("Error fetching user role:", error);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchCurrentUser();
+
+    return () => {
+      isMounted = false; // Clean up to avoid state updates on unmounted components
+    };
+  }, []);
+
+  return { role, loading };
+};
+
 const MainSidebar = () => {
   const location = usePathname();
+  const { role, loading } = useUserRole();
+  const routes = role === "ADMIN" ? adminRoutes : teacherRoutes;
+
   return (
     <Sidebar>
       <SidebarContent className="bg-[#31A8FF] text-white">
@@ -84,7 +155,8 @@ const MainSidebar = () => {
           <hr className="mt-3 bg-gray-500" />
           <SidebarGroupContent className="mt-3">
             <SidebarMenu>
-              {adminRoutes.map((item) => (
+              {loading && <p className="text-center mb-4">Loading...</p>}
+              {routes.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <Link href={item.url}>
                     <SidebarMenuButton
@@ -113,7 +185,8 @@ const MainSidebar = () => {
                 asChild
               >
                 <SidebarMenuButton>
-                  <User2 /> Admin
+                  <User2 className="-mt-1" />{" "}
+                  {!loading && (role === "ADMIN" ? "Admin" : "Teacher")}
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>

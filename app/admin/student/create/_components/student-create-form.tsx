@@ -185,7 +185,7 @@ export default function StudentCreateForm() {
             disabled={isSubmitting}
             className="bg-[#31A8FF] hover:bg-[#219bf1] rounded-md w-full md:w-auto"
           >
-            {isSubmitting ? "Loading..." : "Create Teacher"}
+            {isSubmitting ? "Loading..." : "Create Student"}
           </Button>
         </div>
       </form>

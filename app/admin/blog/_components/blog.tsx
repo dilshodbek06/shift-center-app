@@ -11,9 +11,10 @@ interface BlogProps {
   tags: string[];
   createdAt: Date;
   id: string;
+  url: string;
 }
 
-const Blog = ({ author, content, createdAt, tags, title, id }: BlogProps) => {
+const Blog = ({ author, content, createdAt, tags, title, url }: BlogProps) => {
   return (
     <div className="group cursor-pointer w-full  border border-gray-300 rounded-2xl p-5 transition-all duration-300 hover:border-[#31A8FF]">
       <div className="flex items-center mb-6">
@@ -24,10 +25,7 @@ const Blog = ({ author, content, createdAt, tags, title, id }: BlogProps) => {
         />
       </div>
       <div className="block">
-        <Link
-          href={`/admin/blog/${id}`}
-          className="hover:underline hover:text-[#219bf1]"
-        >
+        <Link href={url} className="hover:underline hover:text-[#219bf1]">
           <h4 className="text-white hover:text-[#219bf1] font-medium leading-8 line-clamp-1 text-lg">
             {title}
           </h4>
