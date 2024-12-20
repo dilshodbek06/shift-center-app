@@ -14,7 +14,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Teacher } from "@prisma/client";
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 
 interface AddGroupModalProps {
   open: boolean;

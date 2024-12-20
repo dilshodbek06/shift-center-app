@@ -1,8 +1,11 @@
 import { StudentGroupCard } from "./_components/student-group-card";
 import AddGroupForm from "./_components/add-group-form";
 import prisma from "@/lib/db";
+import { getUser, getUserRole } from "@/lib/dal";
 
 const GroupPage = async () => {
+  const user = await getUser();
+  const role = await getUserRole();
   const teachers = await prisma.teacher.findMany({
     orderBy: {
       createdAt: "desc",
@@ -10,6 +13,7 @@ const GroupPage = async () => {
   });
 
   const groups = await prisma.group.findMany({
+    where: role === "TEACHER" ? { teacherId: user?.id } : undefined,
     orderBy: {
       createdAt: "desc",
     },

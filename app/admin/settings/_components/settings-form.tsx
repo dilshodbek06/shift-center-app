@@ -73,7 +73,6 @@ const SettingsForm = ({ user }: SettingsFormProps) => {
       password: user.password,
     },
   });
-
   const { isSubmitting } = form.formState;
 
   async function onSubmit(values: AdminFormValues) {

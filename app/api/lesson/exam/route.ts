@@ -14,6 +14,17 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
+    if (!isCome) {
+      await prisma.studentAttendance.update({
+        where: {
+          id: attendanceId,
+        },
+        data: {
+          mark: 0,
+        },
+      });
+    }
+
     const updatedAttandance = await prisma.studentAttendance.update({
       where: {
         id: attendanceId,

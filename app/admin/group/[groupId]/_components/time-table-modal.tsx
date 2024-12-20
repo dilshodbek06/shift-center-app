@@ -33,8 +33,8 @@ const TimeTableModal = ({
     try {
       setLoading(true);
       await axios.post(`/api/group/${groupId}/timetable`, { price });
-      router.refresh();
       handleClose();
+      router.refresh();
     } catch (error) {
       toast.error("Something went wrong.", error!);
     } finally {
@@ -64,11 +64,24 @@ const TimeTableModal = ({
               <div className="overflow-y-auto scrollbar-thin max-h-[20rem]">
                 <div className="min-h-[60px] mt-4 max-w-md mx-auto">
                   <Input
+                    min={0}
                     value={price}
-                    onChange={(e) => setPrice(e.target.value)}
+                    onChange={(e) => {
+                      const inputValue = Number(e.target.value);
+                      if (inputValue >= 0) {
+                        setPrice(e.target.value);
+                      }
+                    }}
                     type="number"
                     placeholder="price of time table..."
                   />
+                  {price !== "" && (
+                    <p className="mt-2 text-gray-800 text-sm">
+                      Your Time Table price is{" "}
+                      {parseInt(price).toLocaleString()} UZS
+                    </p>
+                  )}
+
                   <p className="mt-6 text-gray-600 text-center text-sm">
                     you can add students later.
                   </p>

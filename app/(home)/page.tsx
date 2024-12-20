@@ -2,6 +2,7 @@ import About from "./_components/about";
 import Blogs from "./_components/blogs";
 import Consultation from "./_components/consultation";
 import Courses from "./_components/courses";
+import FloatingAdminButton from "./_components/floating-admin-button";
 import Footer from "./_components/footer";
 import Hero from "./_components/hero";
 import MarqueeImages from "./_components/marquee-images";
@@ -14,6 +15,7 @@ export default function Home() {
   return (
     <div>
       {/* Hero includes Header */}
+      <FloatingAdminButton />
       <div className="p-2 md:p-3">
         <Hero />
       </div>
@@ -46,7 +48,7 @@ export default function Home() {
         <Blogs />
       </div>
       {/* CONSULTATION */}
-      <div className="mt-6 md:mt-28">
+      <div id="consultation-section" className="mt-6 md:mt-28 pt-6">
         <Consultation />
       </div>
       {/* our location */}

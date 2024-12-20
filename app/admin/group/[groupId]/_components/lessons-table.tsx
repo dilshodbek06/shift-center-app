@@ -220,6 +220,9 @@ const LessonsTable = ({ groupId, data, studentsData }: LessonsTableProps) => {
         </div>
       )}
 
+      {data.length <= 0 && (
+        <div className="text-center">You don&apos;t have timeTable yet.</div>
+      )}
       {/* students data table */}
       {data.length > 0 && (
         <div className="overflow-x-auto">

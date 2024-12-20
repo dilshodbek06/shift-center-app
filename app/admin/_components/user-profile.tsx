@@ -14,8 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogOut, Settings } from "lucide-react";
-import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import { useRouter } from "nextjs-toploader/app";
 import axios from "axios";
 
 interface UserProfileProps {
@@ -23,6 +22,7 @@ interface UserProfileProps {
     name: string;
     email: string;
     avatarUrl?: string;
+    role?: string;
   } | null;
 }
 
@@ -68,10 +68,12 @@ export function UserProfile({ user }: UserProfileProps) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={handleSettingsClick}>
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
-          </DropdownMenuItem>
+          {user?.role === "ADMIN" && (
+            <DropdownMenuItem onClick={handleSettingsClick}>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Settings</span>
+            </DropdownMenuItem>
+          )}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>

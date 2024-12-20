@@ -28,12 +28,11 @@ import {
   LogOutIcon,
   Newspaper,
   Settings,
-  SettingsIcon,
   User2,
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const adminRoutes = [
@@ -95,11 +94,7 @@ const teacherRoutes = [
     url: "/admin/blog",
     icon: Newspaper,
   },
-  {
-    title: "Settings",
-    url: "/admin/settings",
-    icon: Settings,
-  },
+
   {
     title: "Website",
     url: "/",
@@ -142,8 +137,18 @@ const useUserRole = () => {
 
 const MainSidebar = () => {
   const location = usePathname();
+  const router = useRouter();
   const { role, loading } = useUserRole();
   const routes = role === "ADMIN" ? adminRoutes : teacherRoutes;
+
+  const handleLogout = async () => {
+    try {
+      await axios.post("/api/user/logout");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      router.push("/sign-in");
+    }
+  };
 
   return (
     <Sidebar>
@@ -194,11 +199,10 @@ const MainSidebar = () => {
                 side="top"
                 className="w-[--radix-popper-anchor-width]"
               >
-                <DropdownMenuItem className="flex items-center justify-between">
-                  <span>Settings</span>
-                  <SettingsIcon className="size-5" />
-                </DropdownMenuItem>
-                <DropdownMenuItem className="flex items-center justify-between">
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="flex items-center justify-between"
+                >
                   <span>Log out</span>
                   <LogOutIcon className="size-5" />
                 </DropdownMenuItem>

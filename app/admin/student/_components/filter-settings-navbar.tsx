@@ -1,7 +1,11 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-const FilterSettingsNavbar = () => {
+interface FilterSettingsNavbarProps {
+  isTeacher: boolean;
+}
+
+const FilterSettingsNavbar = ({ isTeacher }: FilterSettingsNavbarProps) => {
   return (
     <div className="min-h-[60px]  flex items-center justify-end">
       {/* view types */}
@@ -21,13 +25,15 @@ const FilterSettingsNavbar = () => {
           <LayoutGrid className="size-5" />
         </Button>
       </div> */}
-      <div>
-        <Link href="/admin/student/create">
-          <Button className="bg-[#31A8FF]  hover:bg-[#219bf1]">
-            + Add new
-          </Button>
-        </Link>
-      </div>
+      {!isTeacher && (
+        <div>
+          <Link href="/admin/student/create">
+            <Button className="bg-[#31A8FF]  hover:bg-[#219bf1]">
+              + Add new
+            </Button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

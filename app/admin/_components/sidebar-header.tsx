@@ -8,7 +8,6 @@ import ScreenElements from "./screen-elements";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { Admin, Teacher } from "@prisma/client";
 
 interface SidebarHeaderProps {
   elementRef: React.RefObject<HTMLDivElement>;

@@ -8,10 +8,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, Edit, Eye, LoaderCircle, Trash2, X } from "lucide-react";
+import { Check, Edit, Eye, LoaderCircle, X } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import toast from "react-hot-toast";
 import axios from "axios";
 
@@ -78,11 +78,6 @@ export function StudentGroupCard({
               <Edit className="h-4 w-4" />
             )}
           </Button>
-          {!isEditing && (
-            <Button variant="ghost" size="icon">
-              <Trash2 className="h-4 w-4 text-red-500" />
-            </Button>
-          )}
           {isEditing && (
             <Button
               variant="ghost"

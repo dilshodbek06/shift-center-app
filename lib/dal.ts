@@ -11,19 +11,33 @@ export const getUser = cache(async () => {
   if (!session) return null;
 
   try {
-    let currentUser = null;
+    let currentRole = null;
     if (session?.role === "ADMIN") {
-      currentUser = await prisma.admin.findUnique({
+      currentRole = await prisma.admin.findUnique({
         where: { id: session.userId as string },
       });
     } else if (session?.role === "TEACHER") {
-      currentUser = await prisma.teacher.findUnique({
+      currentRole = await prisma.teacher.findUnique({
         where: { id: session.userId as string },
       });
     }
-    currentUser!.password = "";
+    currentRole!.password = "";
 
-    return currentUser;
+    return currentRole;
+  } catch (error) {
+    console.log("Failed to fetch user", error);
+    return null;
+  }
+});
+
+export const getUserRole = cache(async () => {
+  const cookie = cookies().get("session")?.value;
+  const session = await decrypt(cookie);
+  if (!session) return null;
+
+  try {
+    const currentRole: string | null = session?.role as string;
+    return currentRole;
   } catch (error) {
     console.log("Failed to fetch user", error);
     return null;

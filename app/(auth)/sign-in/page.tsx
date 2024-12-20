@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { loginAdmin, loginTeacher } from "@/app/actions/auth-actions";
@@ -36,7 +37,6 @@ const LoginPage = () => {
       }
       setLoading(false);
     } catch (error) {
-      toast.error("Something went wrong.", error!);
     } finally {
       setLoading(false);
     }

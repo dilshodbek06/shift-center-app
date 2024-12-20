@@ -11,7 +11,13 @@ const Breadcrumb = () => {
     <>
       <Separator orientation="vertical" className="mr-2 h-4 opacity-70" />
       <p className="text-gray-300">
-        {fixedPath.slice(0, 1).toUpperCase() + fixedPath.slice(1)}
+        {fixedPath.charAt(0).toUpperCase() +
+          fixedPath.slice(
+            1,
+            fixedPath.lastIndexOf("/") !== -1
+              ? fixedPath.lastIndexOf("/")
+              : undefined
+          )}
       </p>
     </>
   );
