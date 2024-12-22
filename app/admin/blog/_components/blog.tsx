@@ -16,7 +16,7 @@ interface BlogProps {
 
 const Blog = ({ author, content, createdAt, tags, title, url }: BlogProps) => {
   return (
-    <div className="group cursor-pointer w-full  border border-gray-300 rounded-2xl p-5 transition-all duration-300 hover:border-[#31A8FF]">
+    <div className="group  w-full  border border-gray-300 rounded-2xl p-5 transition-all duration-300 hover:border-[#31A8FF]">
       <div className="flex items-center mb-6">
         <img
           src="https://pagedone.io/asset/uploads/1696244553.png"
