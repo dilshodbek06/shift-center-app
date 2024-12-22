@@ -61,7 +61,6 @@ type CustomGroupTimeTables = {
     attendances: Array<{
       id: string;
       studentTimeTableId: string;
-      month: number | null;
       mark: number | null;
       isComing: boolean;
       lessonId: string;
