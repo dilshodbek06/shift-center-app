@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { loginAdmin, loginTeacher } from "@/app/actions/auth-actions";
+import {
+  generateAdmin,
+  loginAdmin,
+  loginTeacher,
+} from "@/app/actions/auth-actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { GraduationCap, ShieldAlert } from "lucide-react";

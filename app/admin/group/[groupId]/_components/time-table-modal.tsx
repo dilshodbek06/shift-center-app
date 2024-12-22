@@ -35,6 +35,7 @@ const TimeTableModal = ({
       await axios.post(`/api/group/${groupId}/timetable`, { price });
       handleClose();
       router.refresh();
+      window.location.reload();
     } catch (error) {
       toast.error("Something went wrong.", error!);
     } finally {
